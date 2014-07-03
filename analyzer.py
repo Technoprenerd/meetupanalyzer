@@ -57,7 +57,7 @@ If N yes >= percentage number, over all meetups.
 There is a chance that that person will attend another meetup from that group.
 Easy :)'''
 
-#something is not allright...
+#something is not allright... :"(
 
 certainty = percentage * float(number_events)
 for member in members:
