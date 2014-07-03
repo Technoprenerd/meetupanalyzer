@@ -7,17 +7,14 @@ from api_key import api_key
 
 ### CONFIG ###
 urlname = "Appsterdam"
-page = "50"
-time = "-1m,-1d"
+page = "200"
+time = "-6m,-1d"
 status = "past"
 rsvp_page = "100"
-percentage = 0.2
-### // ###
+percentage = 0.6
+### /CONFIG/ ###
 
-### QUICK FIX = Requests does NOT verify HTTPS <<<
-
-past_events = requests.get("https://api.meetup.com/2/events?&sign=true&status="+status+"&group_urlname="+urlname+"&time="+time+"&page="+page+"&key="+api_key, verify=False)
-print past_events.status_code
+past_events = requests.get("https://api.meetup.com/2/events?&sign=true&status="+status+"&group_urlname="+urlname+"&time="+time+"&page="+page+"&key="+api_key)
 
 events_id = list()
 
@@ -25,12 +22,13 @@ for events in past_events.json()['results']:
 	events_id.append(events['id'].encode('utf-8'))
 
 print events_id
+number_events = len(events_id)
 
 members = dict()
 events_dict = dict()
 
 for event in events_id:
-	rsvp_event = requests.get("https://api.meetup.com/2/rsvps?&sign=true&event_id="+event+"&page="+rsvp_page+"&key="+api_key, verify=False)
+	rsvp_event = requests.get("https://api.meetup.com/2/rsvps?&sign=true&event_id="+event+"&page="+rsvp_page+"&key="+api_key)
 	print rsvp_event.status_code
 
 	for member in rsvp_event.json()['results']:
@@ -59,9 +57,13 @@ If N yes >= percentage number, over all meetups.
 There is a chance that that person will attend another meetup from that group.
 Easy :)'''
 
+#something is not allright...
 
-certainty = percentage * float(page)
+certainty = percentage * float(number_events)
 for member in members:
 	n = len(members[member][2]['responses'])
+
 	if n >= certainty:
 		print member + " likelyhood, more than = " + str(certainty) + " '%' meetups this person has gone to in the past " + time
+		member_percentage = int(float(number_events)) / int(float(n))
+		print member + " number events " + str(number_events) + " / number of yes " + str(n) + " ==> percentage = " + str(float(member_percentage))

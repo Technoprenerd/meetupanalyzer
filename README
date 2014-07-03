@@ -1,1 +1,10 @@
 Meetup Analyzer is an analyzer that guesses the likelyhood of users going to other events from that same meetup.
+
+
+Number of events from past 6 months, time = -6m,-1w
+Get event rsvps from all events.
+Add number of YES of each member.
+If N yes >= percentage number, over all meetups.
+Then there is a chance that that person will attend another meetup from that group.
+
+Easy :)
